@@ -1,7 +1,5 @@
 import pygame
-import pygame.freetype  # Import the freetype module
 import random
-import datetime
 import json
 
 # Initialize Pygame
@@ -14,7 +12,7 @@ SCREEN_TITLE = "Flappy Terd : Pooper Hero"
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
-FPS = 60  # Increased back to 60 for smoother framerate
+FPS = 60
 
 # Screen setup
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -40,7 +38,6 @@ pygame.mixer.music.play(-1)  # Play background music in a loop
 flap_sound = pygame.mixer.Sound("flap.mp3")
 collision_sound = pygame.mixer.Sound("collision.mp3")
 score_sound = pygame.mixer.Sound("score.mp3")
-tada_sound = pygame.mixer.Sound("tada.mp3")  # Load the tada sound
 
 # Game variables
 player_name = ""
@@ -162,7 +159,7 @@ def new_game():
     score = 0
     pipes = []
     pipe_width = 70
-    pipe_gap = 200 * 1.35  # Increase the gap by 35%
+    pipe_gap = 200 * 1.2  # Increase the gap by 20%
     difficulty = 1
     color_change_timer = 0
     lives = 3  # Player starts with 3 lives
@@ -209,15 +206,8 @@ def new_game():
             if lives == 0:
                 highscores.append({"name": player_name, "score": score})
                 highscores = sorted(highscores, key=lambda x: x["score"], reverse=True)[:10]
-                # Remove duplicate highscores for each player, keeping only their highest score
-                unique_highscores = {}
-                for entry in highscores:
-                    if entry["name"] not in unique_highscores or entry["score"] > unique_highscores[entry["name"]]:
-                        unique_highscores[entry["name"]] = entry["score"]
-                highscores = [{"name": name, "score": score} for name, score in unique_highscores.items()]
                 save_highscores()
                 if highscores[0]['name'] == player_name and highscores[0]['score'] == score:
-                    tada_sound.play()  # Play the tada sound
                     show_congrats_screen()
                 break
             else:
